@@ -1,0 +1,225 @@
+RewriteEngine On
+RewriteBase /your-project/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+
+
+
+
+
+
+RewriteEngine On
+RewriteBase /Web_Stationery/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+
+// test
+RewriteEngine On
+RewriteBase /Web_Stationery/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+
+
+
+
+
+
+
+
+// Lấy URL từ query string và xử lý
+
+// ở dây
+// $url = isset($_GET['url']) ? $_GET['url'] : 'home/index';
+// $url = explode('/', $url);
+
+// Tạo tên controller và action
+$controllerName = ucfirst($url[0]) . 'Controller';
+$action = isset($url[1]) ? $url[1] : 'index';
+
+
+// Tạo đường dẫn đến controller
+$controllerFile = "./app/controllers/$controllerName.php";
+
+// Kiểm tra nếu controller tồn tại
+if (file_exists($controllerFile)) {
+    require_once $controllerFile;
+    $controller = new $controllerName;
+
+    // Kiểm tra nếu action tồn tại trong controller
+    if (method_exists($controller, $action)) {
+        // Lấy tham số từ URL (sau controller và action)
+        $params = array_slice($url, 2);
+
+        // Kết hợp tham số từ URL và query string ($_GET)
+        $queryParams = $_GET;
+        unset($queryParams['url']); // Loại bỏ tham số 'url' khỏi $_GET
+
+        // Gộp các tham số từ URL và query string
+        $params = array_merge($params, $queryParams);
+
+        // Gọi action và truyền các tham số
+        call_user_func_array([$controller, $action], $params);
+    } else {
+        // Nếu action không tồn tại, xử lý lỗi
+        http_response_code(404);
+        echo "404 - Action not found: $action";
+    }
+} else {
+    // Nếu controller không tồn tại, xử lý lỗi
+    http_response_code(404);
+    echo "404 - Controller not found: $controllerName";
+}
+
+
+
+  echo '<pre>';
+        print_r($this->__params);
+        echo '</pre>';
+
+
+
+         <li class="page-item active"><a class="page-link">1</a></li>
+            <li class="page-item"><a class="page-link">2</a></li>
+            <li class="page-item"><a class="page-link">3</a></li>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<script>
+		$(document).ready(function() {
+			$('#sortSelect').on('change', function() {
+				// Lấy dữ liệu từ form
+				var formData = $('#sortForm').serialize(); // Tạo chuỗi query từ form
+				console.log(formData);
+
+				// Gửi yêu cầu AJAX
+				$.ajax({
+					url: '<?php _DIR_ROOT . '/app/controllers/HomeController/listproducts' ?>', // Địa chỉ URL để gửi yêu cầu
+					method: 'GET',
+					data: formData, // Gửi dữ liệu
+					success: function(response) {
+						// Cập nhật nội dung trong resultContainer
+						console.log(response.data);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.error('Error fetching data:', textStatus, errorThrown);
+					}
+				});
+			});
+		});
+	</script>
+
+
+
+    <?php echo htmlspecialchars($_SERVER['REQUEST_URI']); ?>
+
+
+
+
+
+
+
+
+
+    $(document).on('click', '.btn-delete_cart-item', function() {
+		let itemId = $(this).data('item-id');
+		// Gửi yêu cầu AJAX
+		$.ajax({
+			url: "<?php _DIR_ROOT . '/app/controllers/CartController/checktest' ?>", // Địa chỉ URL để gửi yêu cầu
+			method: 'POST',
+			data: {
+				item_id: itemId,
+			}, // Gửi dữ liệu
+			success: function(response) {
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(response, 'text/html');
+				console.log(doc);
+				// const content = doc.getElementById('product-container');
+				// const pagination = doc.getElementById('pagination');
+				// content && (document.getElementById('product-container').innerHTML = content.innerHTML);
+				// pagination && (document.getElementById('pagination').innerHTML = pagination.innerHTML);
+
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.error('Error fetching data:', textStatus, errorThrown);
+			}
+		});
+	});
+
+    <?php echo _WEB_ROOT . '/CartController/checktest' ?>
+
+
+
+
+	// [ID] => 1
+        // [Quantity] => 19
+        // [Price] => 1000.00
+        // [ProductName] => Gôm Pentel Nhỏ (ZEH-03)
+        // [ImageURL] => /Upload/Product/23.jpg
+        // [ProductId] => 23
+
+        // echo '<pre>';
+        // print_r($order);
+        // echo '</pre>';
+
+
+
+
+		UPDATE orderdetail
+SET Price = CASE 
+    WHEN PriceSale IS NOT NULL THEN PriceSale * Quantity
+    ELSE UnitPrice * Quantity
+END;
+
+
+
+
+
+$breadcrumbConfig = [
+    'trang-chu' => [
+        'name' => 'Trang chủ',
+        'url' => _WEB_ROOT . '/trang-chu',
+        'parent' => null, // Trang chủ không có parent
+    ],
+    'danh-muc$' => [
+        'name' => 'Sản phẩm',
+        'url' => _WEB_ROOT . '/danh-muc',
+        'parent' => 'trang-chu', // Trang chủ là parent
+    ],
+    'danh-muc-(\d+)$' => [
+        'name' => 'Danh mục sản phẩm',
+        'url' => _WEB_ROOT . '/danh-muc/$1',
+        'parent' => 'trang-chu', // Danh mục là parent
+    ],
+    'san-pham/([a-zA-Z0-9-]+)-(\d+)' => [
+        'name' => 'Chi tiết sản phẩm',
+        'url' => _WEB_ROOT . '/san-pham/$2',
+        'parent' => 'danh-muc-(\d+)$', // Danh mục là parent
+    ],
+    'dang-nhap' => ['name' => 'Đăng nhập', 'url' => _WEB_ROOT . '/dang-nhap'],
+    'lien-he' => ['name' => 'Liên hệ', 'url' => _WEB_ROOT . '/lien-he'],
+    'gio-hang' => ['name' => 'Giỏ hàng', 'url' => _WEB_ROOT . '/gio-hang'],
+    'don-hang' => ['name' => 'Đơn hàng', 'url' => _WEB_ROOT . '/don-hang'],
+    'chi-tiet-don-hang' => ['name' => 'Chi tiết đơn hàng', 'url' => _WEB_ROOT . '/chi-tiet-don-hang'],
+    'thanh-toan' => ['name' => 'Thanh toán', 'url' => _WEB_ROOT . '/thanh-toan'],
+];
+
+
+
+$breadcrumbConfig = [
+    'trang-chu' => ['name' => 'Trang chủ', 'url' => _WEB_ROOT . '/trang-chu'],
+    'danh-muc$' => ['name' => 'Sản phẩm', 'url' => _WEB_ROOT . '/danh-muc'],
+    'danh-muc-(\d+)$' => ['name' => 'Sản phẩm', 'url' => _WEB_ROOT . '/danh-muc/$1'],
+    'san-pham/([a-zA-Z0-9-]+)-(\d+)' => ['name' => 'Chi tiết sản phẩm', 'url' => _WEB_ROOT . '/san-pham'],
+    'dang-nhap' => ['name' => 'Đăng nhập', 'url' => _WEB_ROOT . '/dang-nhap'],
+    'lien-he' => ['name' => 'Liên hệ', 'url' => _WEB_ROOT . '/lien-he'],
+    'gio-hang' => ['name' => 'Giỏ hàng', 'url' => _WEB_ROOT . '/gio-hang'],
+    'don-hang' => ['name' => 'Đơn hàng', 'url' => _WEB_ROOT . '/don-hang'],
+    'chi-tiet-don-hang' => ['name' => 'Chi tiết đơn hàng', 'url' => _WEB_ROOT . '/chi-tiet-don-hang'],
+    'thanh-toan' => ['name' => 'Thanh toán', 'url' => _WEB_ROOT . '/thanh-toan'],
+];
